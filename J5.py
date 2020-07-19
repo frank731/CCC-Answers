@@ -1,3 +1,4 @@
+#cant pass all cases yet
 class RollingHash:
     def __init__(self, text, sizeWord):
         self.text = text
