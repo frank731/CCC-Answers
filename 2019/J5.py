@@ -1,4 +1,3 @@
-#cant pass all cases yet
 class RollingHash:
     def __init__(self, text, sizeWord):
         self.text = text
@@ -22,6 +21,7 @@ class RollingHash:
     def window_text(self):
         return self.text[self.window_start:self.window_end]
 
+
 def rabin_karp(word, text):
     if word == "" or text == "":
         return []
@@ -38,6 +38,7 @@ def rabin_karp(word, text):
         rolling_hash.move_window()
     return returned
 
+
 sub1 = input().split()
 sub2 = input().split()
 sub3 = input().split()
@@ -45,37 +46,35 @@ s, i, f = input().split()
 s = int(s)
 
 rules = {sub1[0]: [sub1[1], 1, len(sub1[0]), len(sub1[1])], sub2[0]: [sub2[1], 2, len(sub2[0]), len(sub2[1])], sub3[0]: [sub3[1], 3, len(sub3[0]), len(sub3[1])]}
-seen = {i : True}
-steps = {}
-memoize = {}
-iteration = [i]
-printed = []
-for i in range(1, s + 1):
-    toadd = []
-    for string in iteration:
-        if string not in memoize:
-            memoize[string] = []
-            for rule in rules:
-                indexes = rabin_karp(rule, string)
-                for index in indexes:
-                    temp2 = string[:index] + rules[rule][0] + string[index:]
-                    temp2 = temp2[:index + rules[rule][3]] + temp2[index + rules[rule][3] + rules[rule][2]:]
-                    if (temp2, i) not in seen:
-                        seen[(temp2, i)] = True
-                        toadd.append(temp2)
-                        steps[(temp2, i)] = [rules[rule][1], index + 1, string]
-                        memoize[string].append([rules[rule][1], index + 1, temp2])
-        else:
-            for o in memoize[string]:
-                toadd.append(o[2])
-                steps[(o[2], i)] = [o[0], o[1], string]
-    iteration = toadd
+seen = {}
 
-needed = f
-for i in reversed(range(1, s + 1)):
-    temp = steps[(needed, i)]
-    printed.append(str(temp[0]) + " " + str(temp[1]) + " " + str(needed))
-    needed = temp[2]
+def loop(iteration, rtypes, indexes, past, string):
+    if iteration == s and string == f:
+        for index in range(s):
+            print(rtypes[index], indexes[index], past[index])
+        return True
+    if (string, iteration) in seen:
+        return False
+    elif iteration == s:
+        return False
+    else:
+        seen[(string, iteration)] = True
+        for rule in rules:
+            found = rabin_karp(rule, string)
+            for index in found:
+                newstring = string[:index] + rules[rule][0] + string[index:]
+                newstring = newstring[:index + rules[rule][3]] + newstring[index + rules[rule][3] + rules[rule][2]:]
+                arg1 = rtypes + [rules[rule][1]]
+                arg2 = indexes + [index + 1]
+                arg3 = past + [newstring]
+                out = loop(iteration + 1, arg1, arg2, arg3, newstring)
+                if out:
+                    return True
 
-for i in reversed(printed):
-    print(i)
+    return False
+
+loop(0, [], [], [], i)
+
+
+
+
