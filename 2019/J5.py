@@ -47,31 +47,37 @@ s = int(s)
 
 rules = {sub1[0]: [sub1[1], 1, len(sub1[0]), len(sub1[1])], sub2[0]: [sub2[1], 2, len(sub2[0]), len(sub2[1])], sub3[0]: [sub3[1], 3, len(sub3[0]), len(sub3[1])]}
 seen = {}
+done = False
+
 
 def loop(iteration, rtypes, indexes, past, string):
-    if iteration == s and string == f:
-        for index in range(s):
-            print(rtypes[index], indexes[index], past[index])
-        return True
-    if (string, iteration) in seen:
-        return False
-    elif iteration == s:
-        return False
-    else:
-        seen[(string, iteration)] = True
-        for rule in rules:
-            found = rabin_karp(rule, string)
-            for index in found:
-                newstring = string[:index] + rules[rule][0] + string[index:]
-                newstring = newstring[:index + rules[rule][3]] + newstring[index + rules[rule][3] + rules[rule][2]:]
-                arg1 = rtypes + [rules[rule][1]]
-                arg2 = indexes + [index + 1]
-                arg3 = past + [newstring]
-                out = loop(iteration + 1, arg1, arg2, arg3, newstring)
-                if out:
-                    return True
+    global done
+    if not done:
+        if iteration == s and string == f:
+            for index in range(s):
+                print(rtypes[index], indexes[index], past[index])
+                done = True
+            return True
+        if (string, iteration) in seen:
+            return False
+        elif iteration == s:
+            return False
+        else:
+            seen[(string, iteration)] = True
+            for rule in rules:
+                found = rabin_karp(rule, string)
+                for index in found:
+                    newstring = string[:index] + rules[rule][0] + string[index:]
+                    newstring = newstring[:index + rules[rule][3]] + newstring[index + rules[rule][3] + rules[rule][2]:]
+                    arg1 = rtypes + [rules[rule][1]]
+                    arg2 = indexes + [index + 1]
+                    arg3 = past + [newstring]
+                    out = loop(iteration + 1, arg1, arg2, arg3, newstring)
+                    if out:
+                        return True
 
     return False
+
 
 loop(0, [], [], [], i)
 
