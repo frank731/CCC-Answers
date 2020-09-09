@@ -131,7 +131,7 @@ bool loop(string currentstring, string endstring, vector<string> rulesnum, vecto
 			}
 			else
 			{
-				/*
+				
 				for (string next: memoize[currentstring])
 				{
 					vector<string> arg1 = rulesnum;
@@ -146,7 +146,7 @@ bool loop(string currentstring, string endstring, vector<string> rulesnum, vecto
 						return true;
 					}
 				}
-				*/
+				
 				
 			}
 			
