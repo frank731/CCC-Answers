@@ -1,46 +1,43 @@
-#in progress
+from collections import OrderedDict
 
-count = input()
+count = int(input())
 boards = [int(x) for x in input().split()]
-boards.sort()
-boardcount = {}
+board_lengths = OrderedDict()
 sums = [0] * 4001
 
 for board in boards:
-    if board in boardcount:
-        boardcount[board] += 1
+    if board in board_lengths:
+        board_lengths[board] += 1
     else:
-        boardcount[board] = 1
+        board_lengths[board] = 1
 
-def mainloop(b, i):
-    for board in b:
-        if board > i:
-            break
+board_lengths = list(board_lengths.items())
+
+for i in range(len(board_lengths)):
+    for o in range(i, len(board_lengths)):
+        if i == o:
+            sums[board_lengths[i][0] * 2] += board_lengths[i][1] // 2
+            #print(sums[board_lengths[i][0] * 2], board_lengths[i][0] * 2)
         else:
-            if i - board in b:
-                if i - board == board:
-                    if b[board] > 1:
-                        print(i - board, board, i, "bruh")
-                        sums[i] += 1
-                        b[board] -= 2
-                elif b[board] > 0 and b[i - board] > 0:
-                    print(i - board, board, i)
-                    sums[i] += 1
-                    b[board] -= 1
-                    b[i - board] -= 1
-
-
-for i in range(1, 4001):
-    mainloop(boards, i)
-print(sums)
-longest = 0
-size = 0
+            sums[board_lengths[i][0] + board_lengths[o][0]] += min(board_lengths[i][1], board_lengths[o][1])
+            #print(sums[board_lengths[i][0] + board_lengths[o][0]], board_lengths[i][0] + board_lengths[o][0])
+    '''
+for i in range(4001):
+    if sums[i] != 0:
+        #print(i, sums[i])
+        pass
+        '''
+largest_length = 0
+largest_amount = 0
 
 for sum in sums:
-    if sum > longest:
-        longest = sum
-        size = 1
-    elif sum == longest:
-        size += 1
+    if sum > largest_length:
+        largest_amount = 1
+        largest_length = sum
+    elif sum == largest_length:
+        largest_amount += 1
 
-print(longest, size)
+print(largest_length, largest_amount)
+
+
+
