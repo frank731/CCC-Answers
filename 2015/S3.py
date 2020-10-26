@@ -1,20 +1,19 @@
 gates_count = int(input())
 planes_count = int(input())
 planes = []
-seen = {}
-fitted = 1
-
+docked = [False] * gates_count
 
 for i in range(planes_count):
     planes.append(int(input()))
 
-planes.sort(reverse=True)
-
-largest = planes[0]
-
-for plane in planes[1:]:
-    if plane > largest:
-        largest -= 1
-        fitted += 1
-
-print(fitted)
+for i in range(planes_count):
+    plane = planes[i] - 1
+    if docked[plane]:
+        while docked[plane]:
+            plane -= 1
+            if plane == -1:
+                break
+    if plane == -1:
+        print(i)
+        break
+    docked[plane] = True
